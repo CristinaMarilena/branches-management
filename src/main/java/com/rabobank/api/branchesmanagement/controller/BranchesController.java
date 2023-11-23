@@ -3,40 +3,44 @@ package com.rabobank.api.branchesmanagement.controller;
 import com.rabobank.api.branchesmanagement.dto.OpenBranchRequest;
 import com.rabobank.api.branchesmanagement.dto.OpenBranchResponse;
 import com.rabobank.api.branchesmanagement.service.BranchService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
 
 @RestController
 @RequestMapping("/branches")
+@RequiredArgsConstructor
+@Slf4j
 public class BranchesController {
-
     private final BranchService branchService;
 
-    @Autowired
-    public BranchesController(BranchService branchService) {
-        this.branchService = branchService;
-    }
-
     @PostMapping(consumes = "application/json", produces = "application/json")
-    public ResponseEntity<OpenBranchResponse> openBranch(@RequestBody OpenBranchRequest branchRequest) {
-        OpenBranchResponse createdBranch = branchService.createBranch(branchRequest);
+    public ResponseEntity<OpenBranchResponse> openBranch(@RequestBody @Valid OpenBranchRequest request) {
+        log.info("Open a new branch [{}]", request);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(createLocationUri(createdBranch.getId()));
+        val response = branchService.openBranch(request);
 
-        return new ResponseEntity<>(createdBranch, headers, HttpStatus.CREATED);
+        return getResponseEntityWithCreated(response);
     }
 
-    private URI createLocationUri(Object resourceId) {
-        return ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(resourceId)
-                .toUri();
+    private ResponseEntity<OpenBranchResponse> getResponseEntityWithCreated(final OpenBranchResponse response) {
+        return ResponseEntity.created(getLocation(response.id()))
+                             .body(response);
+    }
+
+    private URI getLocation(final String branchId) {
+        return ServletUriComponentsBuilder.fromCurrentRequestUri()
+                                          .path("/{id}")
+                                          .buildAndExpand(branchId)
+                                          .toUri();
     }
 }

@@ -1,18 +1,21 @@
 package com.rabobank.api.branchesmanagement.mapper;
 
+import com.rabobank.api.branchesmanagement.document.BranchDocument;
 import com.rabobank.api.branchesmanagement.dto.OpenBranchRequest;
 import com.rabobank.api.branchesmanagement.dto.OpenBranchResponse;
-import com.rabobank.api.branchesmanagement.entity.Branch;
+import com.rabobank.api.branchesmanagement.model.Branch;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.springframework.stereotype.Service;
+import org.mapstruct.ReportingPolicy;
 
-@Mapper
-@Service
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface BranchMapper {
+    Branch mapToBranch(OpenBranchRequest openBranchRequest);
 
     @Mapping(target = "url", ignore = true)
-    OpenBranchResponse branchToCreateBranchResponse(Branch branch);
+    OpenBranchResponse mapToOpenBranchResponse(Branch branch);
 
-    Branch createBranchRequestToBranch(OpenBranchRequest request);
+    BranchDocument mapToBranchDocument(Branch branch);
+
+    Branch mapToBranch(BranchDocument branchDocument);
 }

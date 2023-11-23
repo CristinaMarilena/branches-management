@@ -1,0 +1,13 @@
+spring:
+  main:
+    banner-mode: off
+  application:
+    name: "branches"
+  data:
+    mongodb:
+      database: ${spring.application.name}
+      host: localhost
+      port: 0
+  mongodb:
+    embedded:
+      version: 4.0.21
