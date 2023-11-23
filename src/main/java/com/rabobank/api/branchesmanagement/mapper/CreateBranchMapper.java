@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 @Mapper
 @Service
-public interface BranchMapper {
+public interface CreateBranchMapper {
 
     @Mapping(target = "url", ignore = true)
     OpenBranchResponse branchToCreateBranchResponse(Branch branch);
