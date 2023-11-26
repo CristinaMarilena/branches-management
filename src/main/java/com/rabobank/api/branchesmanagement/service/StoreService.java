@@ -7,6 +7,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.NoSuchElementException;
+
 @Service
 @RequiredArgsConstructor
 public class StoreService {
@@ -19,5 +22,23 @@ public class StoreService {
         val savedBranchDocument = branchRepository.save(branchDocument);
 
         return branchMapper.mapToBranch(savedBranchDocument);
+    }
+
+    public void deleteBranch(final String id) {
+        branchRepository.deleteById(id);
+    }
+
+    public Branch getBranch(final String id) {
+        val branchDocument = branchRepository.findById(id)
+                                             .orElseThrow(() -> new NoSuchElementException("No such branch by id " + id));
+
+        return branchMapper.mapToBranch(branchDocument);
+    }
+
+    public List<Branch> getAllBranches() {
+        return branchRepository.findAll()
+                               .stream()
+                               .map(branchMapper::mapToBranch)
+                               .toList();
     }
 }

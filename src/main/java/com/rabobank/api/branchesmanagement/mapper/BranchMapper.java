@@ -1,6 +1,7 @@
 package com.rabobank.api.branchesmanagement.mapper;
 
 import com.rabobank.api.branchesmanagement.document.BranchDocument;
+import com.rabobank.api.branchesmanagement.dto.GetBranchResponse;
 import com.rabobank.api.branchesmanagement.dto.OpenBranchRequest;
 import com.rabobank.api.branchesmanagement.dto.OpenBranchResponse;
 import com.rabobank.api.branchesmanagement.model.Branch;
@@ -18,4 +19,6 @@ public interface BranchMapper {
     BranchDocument mapToBranchDocument(Branch branch);
 
     Branch mapToBranch(BranchDocument branchDocument);
+
+    GetBranchResponse mapToGetBranchResponse(Branch branch);
 }

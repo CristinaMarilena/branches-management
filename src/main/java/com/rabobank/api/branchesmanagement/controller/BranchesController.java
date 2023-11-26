@@ -1,5 +1,6 @@
 package com.rabobank.api.branchesmanagement.controller;
 
+import com.rabobank.api.branchesmanagement.dto.GetBranchResponse;
 import com.rabobank.api.branchesmanagement.dto.OpenBranchRequest;
 import com.rabobank.api.branchesmanagement.dto.OpenBranchResponse;
 import com.rabobank.api.branchesmanagement.service.BranchService;
@@ -7,6 +8,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +19,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/branches")
@@ -30,6 +35,36 @@ public class BranchesController {
         val response = branchService.openBranch(request);
 
         return getResponseEntityWithCreated(response);
+    }
+
+    @DeleteMapping(value = "/{id}", consumes = "application/json", produces = "application/json")
+    public ResponseEntity<Void> closeBranch(@PathVariable("id") String id) {
+        log.info("Close a given branch [{}]", id);
+
+        branchService.closeBranch(id);
+
+        return ResponseEntity.noContent()
+                             .build();
+    }
+
+    @GetMapping(value = "/{id}", consumes = "application/json", produces = "application/json")
+    public ResponseEntity<GetBranchResponse> getBranch(@PathVariable("id") String id) {
+        log.info("Get branch [{}]", id);
+
+        val response = branchService.getBranch(id);
+
+        return ResponseEntity.ok()
+                             .body(response);
+    }
+
+    @GetMapping(consumes = "application/json", produces = "application/json")
+    public ResponseEntity<List<GetBranchResponse>> getAllBranches() {
+        log.info("Get all branches");
+
+        val response = branchService.getAllBranches();
+
+        return ResponseEntity.ok()
+                             .body(response);
     }
 
     private ResponseEntity<OpenBranchResponse> getResponseEntityWithCreated(final OpenBranchResponse response) {
