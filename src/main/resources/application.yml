@@ -1,0 +1,14 @@
+spring:
+  main:
+    banner-mode: off
+  application:
+    name: "branches"
+  data:
+    mongodb:
+      database: ${spring.application.name}
+      host: mongodb
+      port: 27017
+      auto-index-creation: true
+server:
+  servlet:
+    contextPath: /api

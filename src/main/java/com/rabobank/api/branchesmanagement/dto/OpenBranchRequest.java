@@ -1,14 +1,11 @@
 package com.rabobank.api.branchesmanagement.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class OpenBranchRequest {
-    private String name;
-    private String address;
-    private String phone;
+public record OpenBranchRequest(@NotBlank String code,
+                                @NotBlank String name,
+                                @NotBlank String address,
+                                @Pattern(regexp = "^\\d{10}$")
+                                String phone) {
 }
