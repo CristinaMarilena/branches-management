@@ -11,14 +11,13 @@ import org.mapstruct.ReportingPolicy;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface BranchMapper {
+    Branch mapToBranch(OpenBranchRequest request);
 
-    Branch mapToBranch(OpenBranchRequest openBranchRequest);
+    void updateBranch(@MappingTarget Branch branch, UpdateBranchRequest request);
 
-    void updateBranchFromRequest(@MappingTarget Branch branch, UpdateBranchRequest request);
+    GetBranchResponse mapToGetBranchResponse(Branch branch);
 
     BranchDocument mapToBranchDocument(Branch branch);
 
     Branch mapToBranch(BranchDocument branchDocument);
-
-    GetBranchResponse mapToGetBranchResponse(Branch branch);
 }
