@@ -15,12 +15,12 @@ public class BranchService {
     private final BranchMapper branchMapper;
     private final StoreService storeService;
 
-    public OpenBranchResponse openBranch(final OpenBranchRequest request) {
+    public String openBranch(final OpenBranchRequest request) {
         val branch = branchMapper.mapToBranch(request);
 
         val savedBranch = storeService.saveBranch(branch);
 
-        return branchMapper.mapToOpenBranchResponse(savedBranch);
+        return savedBranch.getId();
     }
 
     public void closeBranch(final String id) {
@@ -32,14 +32,12 @@ public class BranchService {
         return branchMapper.mapToGetBranchResponse(branch);
     }
 
-    public UpdateBranchResponse updateBranch(final String id, final UpdateBranchRequest request) {
+    public void updateBranch(final String id, final UpdateBranchRequest request) {
         val existingBranch = storeService.getBranch(id);
 
         branchMapper.updateBranchFromRequest(existingBranch, request);
 
-        val updatedBranch = storeService.saveBranch(existingBranch);
-
-        return branchMapper.mapToUpdateBranchResponse(updatedBranch);
+        storeService.saveBranch(existingBranch);
     }
 
     public List<GetBranchResponse> getAllBranches() {

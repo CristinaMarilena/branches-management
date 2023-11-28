@@ -1,12 +1,21 @@
 package com.rabobank.api.branchesmanagement.controller;
 
-import com.rabobank.api.branchesmanagement.dto.*;
+import com.rabobank.api.branchesmanagement.dto.GetBranchResponse;
+import com.rabobank.api.branchesmanagement.dto.OpenBranchRequest;
+import com.rabobank.api.branchesmanagement.dto.UpdateBranchRequest;
 import com.rabobank.api.branchesmanagement.service.BranchService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
@@ -21,17 +30,17 @@ public class BranchesController {
     private final BranchService branchService;
 
     @PostMapping(consumes = "application/json", produces = "application/json")
-    public ResponseEntity<OpenBranchResponse> openBranch(@RequestBody @Valid OpenBranchRequest request) {
+    public ResponseEntity<Void> openBranch(@RequestBody @Valid OpenBranchRequest request) {
         log.info("Open a new branch [{}]", request);
 
-        val response = branchService.openBranch(request);
+        val id = branchService.openBranch(request);
 
-        return getResponseEntityWithCreated(response);
+        return getResponseEntityWithCreated(id);
     }
 
     @DeleteMapping(value = "/{id}", consumes = "application/json", produces = "application/json")
     public ResponseEntity<Void> closeBranch(@PathVariable("id") String id) {
-        log.info("Close a given branch [{}]", id);
+        log.info("Close given branch [{}]", id);
 
         branchService.closeBranch(id);
 
@@ -45,8 +54,7 @@ public class BranchesController {
 
         val response = branchService.getBranch(id);
 
-        return ResponseEntity.ok()
-                             .body(response);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping(consumes = "application/json", produces = "application/json")
@@ -55,24 +63,23 @@ public class BranchesController {
 
         val response = branchService.getAllBranches();
 
-        return ResponseEntity.ok()
-                             .body(response);
+        return ResponseEntity.ok(response);
     }
 
     @PutMapping(value = "/{id}", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<UpdateBranchResponse> updateBranch(@PathVariable("id") String id,
-                                                             @RequestBody @Valid UpdateBranchRequest request) {
+    public ResponseEntity<Void> updateBranch(@PathVariable("id") String id,
+                                             @RequestBody @Valid UpdateBranchRequest request) {
         log.info("Update branch [{}] with data [{}]", id, request);
 
-        val response = branchService.updateBranch(id, request);
+        branchService.updateBranch(id, request);
 
-        return ResponseEntity.ok()
-                .body(response);
+        return ResponseEntity.noContent()
+                             .build();
     }
 
-    private ResponseEntity<OpenBranchResponse> getResponseEntityWithCreated(final OpenBranchResponse response) {
-        return ResponseEntity.created(getLocation(response.id()))
-                             .body(response);
+    private ResponseEntity<Void> getResponseEntityWithCreated(final String id) {
+        return ResponseEntity.created(getLocation(id))
+                             .build();
     }
 
     private URI getLocation(final String branchId) {

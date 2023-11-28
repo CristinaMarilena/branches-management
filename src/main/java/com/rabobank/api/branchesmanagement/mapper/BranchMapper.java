@@ -1,10 +1,11 @@
 package com.rabobank.api.branchesmanagement.mapper;
 
 import com.rabobank.api.branchesmanagement.document.BranchDocument;
-import com.rabobank.api.branchesmanagement.dto.*;
+import com.rabobank.api.branchesmanagement.dto.GetBranchResponse;
+import com.rabobank.api.branchesmanagement.dto.OpenBranchRequest;
+import com.rabobank.api.branchesmanagement.dto.UpdateBranchRequest;
 import com.rabobank.api.branchesmanagement.model.Branch;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.ReportingPolicy;
 
@@ -15,14 +16,9 @@ public interface BranchMapper {
 
     void updateBranchFromRequest(@MappingTarget Branch branch, UpdateBranchRequest request);
 
-    @Mapping(target = "url", ignore = true)
-    OpenBranchResponse mapToOpenBranchResponse(Branch branch);
-
     BranchDocument mapToBranchDocument(Branch branch);
 
     Branch mapToBranch(BranchDocument branchDocument);
 
     GetBranchResponse mapToGetBranchResponse(Branch branch);
-
-    UpdateBranchResponse mapToUpdateBranchResponse(Branch branch);
 }
