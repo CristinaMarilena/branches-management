@@ -13,6 +13,7 @@ import java.util.NoSuchElementException;
 @Service
 @RequiredArgsConstructor
 public class StoreService {
+
     private final BranchMapper branchMapper;
     private final BranchRepository branchRepository;
 

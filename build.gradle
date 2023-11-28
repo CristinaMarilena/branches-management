@@ -30,6 +30,7 @@ dependencies {
     // Development Tools
     implementation 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    testImplementation 'com.jayway.jsonpath:json-path:2.6.0'
 
     // Lombok
     compileOnly 'org.projectlombok:lombok'

@@ -1,8 +1,6 @@
 package com.rabobank.api.branchesmanagement.service;
 
-import com.rabobank.api.branchesmanagement.dto.GetBranchResponse;
-import com.rabobank.api.branchesmanagement.dto.OpenBranchRequest;
-import com.rabobank.api.branchesmanagement.dto.OpenBranchResponse;
+import com.rabobank.api.branchesmanagement.dto.*;
 import com.rabobank.api.branchesmanagement.mapper.BranchMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
@@ -13,6 +11,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class BranchService {
+
     private final BranchMapper branchMapper;
     private final StoreService storeService;
 
@@ -31,6 +30,16 @@ public class BranchService {
     public GetBranchResponse getBranch(final String id) {
         val branch = storeService.getBranch(id);
         return branchMapper.mapToGetBranchResponse(branch);
+    }
+
+    public UpdateBranchResponse updateBranch(final String id, final UpdateBranchRequest request) {
+        val existingBranch = storeService.getBranch(id);
+
+        branchMapper.updateBranchFromRequest(existingBranch, request);
+
+        val updatedBranch = storeService.saveBranch(existingBranch);
+
+        return branchMapper.mapToUpdateBranchResponse(updatedBranch);
     }
 
     public List<GetBranchResponse> getAllBranches() {
