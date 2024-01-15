@@ -1,0 +1,79 @@
+openapi: 3.0.3
+info:
+  title: Branch API
+  version: 1.0.0
+paths:
+  /branches:
+    post:
+      summary: Open a new branch
+      operationId: openBranch
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpenBranchRequest'
+      responses:
+        '201':
+          description: Branch opened successfully
+  /branches/{id}:
+    get:
+      summary: Get branch by ID
+      operationId: getBranch
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetBranchResponse'
+    delete:
+      summary: Close branch by ID
+      operationId: closeBranch
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Branch closed successfully
+components:
+  schemas:
+    OpenBranchRequest:
+      type: object
+      properties:
+        code:
+          type: string
+        name:
+          type: string
+        address:
+          type: string
+        phone:
+          type: string
+          pattern: '^\\d{10}$'
+    GetBranchResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        code:
+          type: string
+        name:
+          type: string
+        address:
+          type: string
+        phone:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time

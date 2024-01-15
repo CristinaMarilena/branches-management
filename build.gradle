@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '2.7.17'
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+    id 'org.openapi.generator' version '5.3.1'
 }
 
 group = 'com.rabobank'
@@ -44,6 +45,27 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo'
 }
+
+openApiGenerate {
+    generatorName = "spring"
+    inputSpec = "$rootDir/src/main/resources/static/openapi.yaml".toString()
+    outputDir = "${buildDir}/generated-sources".toString()
+    configOptions = [
+            dateLibrary          : "java8",
+            library              : "spring-boot",
+            interfaceOnly        : "true",
+            skipDefaultInterface : "true",
+            performBeanValidation: "true",
+            useOptional          : "true",
+            useTags              : "true",
+            unhandledException   : "true",
+            sourceFolder         : "",
+            useSpringController  : "false",
+            booleanGetterPrefix  : ""
+    ]
+}
+
+tasks.compileJava.dependsOn tasks.openApiGenerate
 
 test {
     useJUnitPlatform()

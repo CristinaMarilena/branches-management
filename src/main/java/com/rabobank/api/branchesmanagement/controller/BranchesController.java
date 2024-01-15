@@ -38,6 +38,15 @@ public class BranchesController {
         return getResponseEntityWithCreated(id);
     }
 
+    @GetMapping(value = "/{id}", consumes = "application/json", produces = "application/json")
+    public ResponseEntity<GetBranchResponse> getBranch(@PathVariable("id") String id) {
+        log.info("Get branch [{}]", id);
+
+        val response = branchService.getBranch(id);
+
+        return ResponseEntity.ok(response);
+    }
+
     @DeleteMapping(value = "/{id}", consumes = "application/json", produces = "application/json")
     public ResponseEntity<Void> closeBranch(@PathVariable("id") String id) {
         log.info("Close given branch [{}]", id);
@@ -46,15 +55,6 @@ public class BranchesController {
 
         return ResponseEntity.noContent()
                              .build();
-    }
-
-    @GetMapping(value = "/{id}", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<GetBranchResponse> getBranch(@PathVariable("id") String id) {
-        log.info("Get branch [{}]", id);
-
-        val response = branchService.getBranch(id);
-
-        return ResponseEntity.ok(response);
     }
 
     @GetMapping(consumes = "application/json", produces = "application/json")
